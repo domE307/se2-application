@@ -1,67 +1,73 @@
 package com.application.se2.misc;
 
+import com.application.se2.model.Entity;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.SimpleLayout;
+
 import static com.application.se2.AppConfigurator.LoggerConfig;
 import static com.application.se2.AppConfigurator.LoggerTopics;
-
-import com.application.se2.model.Entity;
 
 
 /**
  * Local implementation of the Logger interface.
- * 
- * @author sgra64
  *
+ * @author sgra64
  */
 class LoggerImpl implements Logger {
-	private static LoggerImpl instance = null;
+    //private final java.util.logging.Logger reallogger;
+    private final org.apache.log4j.Logger reallogger;
+
+    /**
+     * Private constructor to prevent instance creation outside getInstance().
+     *
+     * @param clazz class that identifies the logger instance.
+     */
+    private LoggerImpl(final Class<?> clazz) {
+        //reallogger = java.util.logging.Logger.getLogger(clazz.getName());
+        reallogger = org.apache.log4j.Logger.getLogger(clazz);
+        SimpleLayout layout = new SimpleLayout();
+        ConsoleAppender consoleAppender = new ConsoleAppender(layout);
+        this.reallogger.addAppender(consoleAppender);
+        this.reallogger.setLevel( Level.ALL );
+    }
+
+    /**
+     * Create and return logger instance for a given class.
+     *
+     * @param clazz class that identifies the logger instance.
+     * @return logger instance for the class.
+     */
+    public static LoggerImpl getInstance(final Class<?> clazz) {
+        return new LoggerImpl(clazz);
+    }
 
 
-	/**
-	 * Private constructor to prevent instance creation outside getInstance().
-	 * @param clazz class that identifies the logger instance.
-	 */
-	private LoggerImpl( final Class<?> clazz ) {
-		
-	}
+    /**
+     * Method to log a message.
+     *
+     * @param topic logs are categorized by (String) topics.
+     * @param msg   log message
+     * @param args  further log information
+     */
+    public void log(final LoggerTopics topic, final String msg, final Object... args) {
+        String id = "<none>";
+        String indicator = " - shutdown";
 
-	/**
-	 * Create and return logger instance for a given class.
-	 * @param clazz class that identifies the logger instance.
-	 * @return logger instance for the class.
-	 */
-	public static LoggerImpl getInstance( final Class<?> clazz ) {
-		if( instance == null ) {
-			instance = new LoggerImpl( clazz );
-		}
-		return instance;
-	}
+        if (LoggerConfig.contains(topic)) {
 
+            switch (topic) {
+                case Always:
+                case Info:
+                case Warn:
+                    reallogger.info(msg);
+                    break;
 
-	/**
-	 * Method to log a message.
-	 * 
-	 * @param topic logs are categorized by (String) topics.
-	 * @param msg log message
-	 * @param args further log information
-	 */
-	public void log( final LoggerTopics topic, final String msg, final Object... args ) {
-		String id = "<none>";
-		String indicator = " - shutdown";
+                case Error:
+                    reallogger.info("ERROR: " + msg);
+                    break;
 
-		if( LoggerConfig.contains( topic ) ) {
-
-			switch( topic ) {
-			case Always:
-			case Info:
-			case Warn:
-				System.out.println( msg );
-				break;
-
-			case Error:
-				System.err.println( "ERROR: " + msg );
-				break;
-
-			case EntityCRUD:
+                case EntityCRUD:
 				/*
 				String cls = "";
 				if( args.length > 0 ) {
@@ -70,72 +76,75 @@ class LoggerImpl implements Logger {
 					id = arg instanceof Entity? ((Entity)arg).getId() : String.valueOf( arg.hashCode() );
 					cls= arg.getClass().getSimpleName();
 				}
-				System.out.println( msg + " " + cls + "." + id );
+				reallogger.info( msg + " " + cls + "." + id );
 				*/
-				StringBuffer sb = new StringBuffer( msg );
-				for( Object arg : args ) {
-					sb.append( arg.toString() );
-				}
-				System.out.println( sb.toString() );
-				break;
+                    StringBuffer sb = new StringBuffer(msg);
+                    for (Object arg : args) {
+                        sb.append(arg.toString());
+                    }
+                    reallogger.info(sb.toString());
+                    break;
 
-			case Startup:
-				indicator = " + startup";
-			case Shutdown:
-				System.out.println( indicator + ": " + msg );
-				break;
+                case Startup:
+                    indicator = " + startup";
+                case Shutdown:
+                    reallogger.info(indicator + ": " + msg);
+                    break;
 
-			case PropertiesAltered:
-			case FieldAccessAltered:
-				System.out.println( msg );
-				break;
+                case PropertiesAltered:
+                case FieldAccessAltered:
+                    reallogger.info(msg);
+                    break;
 
-			case RepositoryLoaded:
-				if( args.length > 0 ) {
-					Object arg = args[ 0 ];
-					arg = arg != null && arg instanceof Traceable? ((Traceable)arg).getRootObject() : arg;
-					id = arg instanceof Entity? ((Entity)arg).getId() : String.valueOf( arg.hashCode() );
-				}
-				System.out.println( "Repository: --> " + id );
-				break;
+                case RepositoryLoaded:
+                    if (args.length > 0) {
+                        Object arg = args[0];
+                        arg = arg != null && arg instanceof Traceable ? ((Traceable) arg).getRootObject() : arg;
+                        id = arg instanceof Entity ? ((Entity) arg).getId() : String.valueOf(arg.hashCode());
+                    }
+                    reallogger.info("Repository: --> " + id);
+                    break;
 
-			case CSSLoaded:
-				System.out.println( msg );
-				break;
+                case CSSLoaded:
+                    reallogger.info(msg);
+                    break;
 
-			}
-		}
-	}
-
-
-	/**
-	 * Print info message.
-	 * @param message log message
-	 */
-	@Override
-	public void info( String message ) {
-		log( LoggerTopics.Info, message );
-	}
+            }
+        }
+    }
 
 
-	/**
-	 * Print warn message.
-	 * @param message log message
-	 */
-	@Override
-	public void warn( String message ) {
-		log( LoggerTopics.Warn, message );
-	}
+    /**
+     * Print info message.
+     *
+     * @param message log message
+     */
+    @Override
+    public void info(String message) {
+        log(LoggerTopics.Info, message);
+    }
 
 
-	/**
-	 * Print error message.
-	 * @param message log message
-	 * @param exception optional exception object to log.
-	 */
-	@Override
-	public void error( String message, Exception exception ) {
-		log( LoggerTopics.Error, message );
-	}
+    /**
+     * Print warn message.
+     *
+     * @param message log message
+     */
+    @Override
+    public void warn(String message) {
+        log(LoggerTopics.Warn, message);
+    }
+
+
+    /**
+     * Print error message.
+     *
+     * @param message   log message
+     * @param exception optional exception object to log.
+     */
+    @Override
+    public void error(String message, Exception exception) {
+        log(LoggerTopics.Error, message);
+    }
 
 }
