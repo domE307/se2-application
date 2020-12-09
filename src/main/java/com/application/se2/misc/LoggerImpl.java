@@ -1,9 +1,6 @@
 package com.application.se2.misc;
 
 import com.application.se2.model.Entity;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.SimpleLayout;
 
 import static com.application.se2.AppConfigurator.LoggerConfig;
 import static com.application.se2.AppConfigurator.LoggerTopics;
@@ -15,7 +12,6 @@ import static com.application.se2.AppConfigurator.LoggerTopics;
  * @author sgra64
  */
 class LoggerImpl implements Logger {
-    //private final java.util.logging.Logger reallogger;
     private final org.apache.log4j.Logger reallogger;
 
     /**
@@ -24,12 +20,7 @@ class LoggerImpl implements Logger {
      * @param clazz class that identifies the logger instance.
      */
     private LoggerImpl(final Class<?> clazz) {
-        //reallogger = java.util.logging.Logger.getLogger(clazz.getName());
         reallogger = org.apache.log4j.Logger.getLogger(clazz);
-        SimpleLayout layout = new SimpleLayout();
-        ConsoleAppender consoleAppender = new ConsoleAppender(layout);
-        this.reallogger.addAppender(consoleAppender);
-        this.reallogger.setLevel( Level.ALL );
     }
 
     /**
