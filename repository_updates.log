@@ -10,3 +10,11 @@
 2020-12-09 22:24:38.050ms INFO  ArticleCatalog: - shutdown: Artikelkatalog
 2020-12-09 22:24:38.052ms INFO  CustomerManager: - shutdown: Kunden
 2020-12-09 22:24:38.053ms INFO  CalculatorLogic: - shutdown: Calculator24
+2021-01-14 20:25:38.295ms INFO  CalculatorLogic: + startup: Calculator24
+2021-01-14 20:25:38.300ms INFO  CustomerManager: + startup: Kunden
+2021-01-14 20:25:38.300ms INFO  ArticleCatalog: + startup: Artikelkatalog
+2021-01-14 20:30:00.169ms INFO  CustomerManager:Update Customer: K909022
+2021-01-14 20:30:26.229ms INFO  ArticleCatalog:Update Article: P84977025
+2021-01-14 20:30:51.602ms INFO  ArticleCatalog: - shutdown: Artikelkatalog
+2021-01-14 20:30:51.602ms INFO  CustomerManager: - shutdown: Kunden
+2021-01-14 20:30:51.602ms INFO  CalculatorLogic: - shutdown: Calculator24

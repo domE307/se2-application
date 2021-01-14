@@ -1,18 +1,27 @@
 package com.application.se2.repository;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.application.se2.misc.Logger;
 import com.application.se2.model.Entity;
 
 
-/**
- * Dummy implementation of Json-Serialization Provider that has no effect.
- * 
- * @author Sven Graupner
- *
- */
 class JsonSerializationProviderImpl implements SerializationProviderIntf {
+	private static final Logger log = Logger.getInstance( JsonSerializationProviderImpl.class );
+
+	private final Class<? extends Entity> clazz;
+	private final String dirPath;
+	private final String fileName;
+
+	private final ObjectMapper mapper;
+
 
 	/**
 	 * Constructor.
@@ -21,7 +30,22 @@ class JsonSerializationProviderImpl implements SerializationProviderIntf {
 	 * @param clazz entity class needed for de-serialization.
 	 */
 	JsonSerializationProviderImpl( String path, Class<? extends Entity> clazz ) {
-
+		this.clazz = clazz;
+		path = path + "/" + clazz.getSimpleName();
+		path = path.replace( '\\', '/' );
+		int i2 = path.lastIndexOf( "/" ) + 1;
+		this.dirPath = path.substring( 0, i2 );
+		this.fileName = path.substring( i2, path.length() ) + ".json";
+		this.mapper = new ObjectMapper();
+		// "dd.MM.yyyy HH:mm", "dd.MM.yyyy", "HH:mm:ss", "yyyy-MM-dd HH:mm a z"
+		SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm a z" );
+		mapper.setDateFormat( dateFormat );
+		//
+		// https://www.baeldung.com/jackson-custom-serialization
+		// https://www.baeldung.com/jackson-deserialization
+		// - SimpleModule module = new SimpleModule();
+		// - module.addSerializer( Customer.class, new CustomerJSONSerializer());
+		// - mapper.registerModule(module);
 	}
 
 
@@ -34,7 +58,15 @@ class JsonSerializationProviderImpl implements SerializationProviderIntf {
 	 */
 	@Override
 	public void writeSerialStream( List<? extends Entity> list ) throws IOException {
-
+		File dir = new File( dirPath );
+		if( ! dir.exists() ) {
+			dir.mkdirs();	// create dataPath, if not present
+			log.info( dirPath + " created." );
+		}
+		final String fullFilename = dirPath + fileName;
+		File file = new File( fullFilename );
+		log.info( "saved (" + fullFilename + ")." );
+		mapper.writerWithDefaultPrettyPrinter().writeValue( file, list );
 	}
 
 
@@ -47,7 +79,30 @@ class JsonSerializationProviderImpl implements SerializationProviderIntf {
 	 */
 	@Override
 	public void readSerialStream( CollectorIntf collector ) throws IOException {
+		final String fullFilename = dirPath + fileName;
+		try {
+			File file = new File( fullFilename );
 
+			JsonNode n = mapper.readTree( file );
+
+			for( JsonNode en : n ) {
+				Entity e3 = mapper.treeToValue( en , clazz );
+				collector.collect( e3 );
+			}
+			log.info( "loaded (" + fullFilename + ")." );
+
+		} catch( JsonParseException e ) {
+			log.error( "JsonParseException: " + e.getMessage(), e );
+			throw new IOException( e.getMessage() );
+
+		} catch( FileNotFoundException e ) {
+			// ignore, will create empty repository
+			log.info( "FileNotFoundException: " + fullFilename );
+
+		} catch( Exception e ) {
+			log.error( "JSON deserialization: ClassNotFoundException: " + e.getMessage() , e );
+			throw new IOException( e.getMessage() );
+		}
 	}
 
 }

@@ -26,6 +26,14 @@ public class Article implements Entity {
 
 
 	/**
+	 * Private default constructor (required by JSON deserialization).
+	 */
+	@SuppressWarnings("unused")
+	private Article() {
+		this( null, null );
+	}
+
+	/**
 	 * Public constructor.
 	 * @param name Article name.
 	 * @param price Article price.
@@ -92,7 +100,7 @@ public class Article implements Entity {
 	/**
 	 * Set Article price.
 	 * 
-	 * @param name Article price.
+	 * @param price Article price.
 	 * @return self reference.
 	 */
 	public Article setPrice( final String price ) {

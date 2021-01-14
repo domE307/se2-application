@@ -63,6 +63,15 @@ public class Note implements Serializable {
 	}
 
 
+	/**
+	 * Externalize Note as String. Example: "2018-03-15 20:10:27.730, Customer 1234 created".
+	 * @return Note as externalized String.
+	 */
+	public String externalize() {
+		return EntityProperty.DF_yyyy_MM_dd_HH_mm_ss_SSS.format( timeStamp ) + FieldSeparator + noteText;
+	}
+
+
 	/*
 	 * Private methods.
 	 */
