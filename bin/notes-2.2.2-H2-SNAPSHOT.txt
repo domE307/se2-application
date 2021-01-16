@@ -1,4 +1,0 @@
-This branch includes Spring-Data persistence using the embedded H2
-database.
-
-+
