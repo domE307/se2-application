@@ -1,0 +1,13 @@
+.classpath
+.project
+.settings
+target
+data*
+/log*
+*.tar
+<<<<<<< HEAD
+.idea/
+*.iml
+=======
+playbook.txt
+>>>>>>> sgra64/spring-data-persistence

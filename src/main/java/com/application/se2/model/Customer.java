@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.*;
+import javax.persistence.Entity;
+
 import com.application.se2.misc.IDGenerator;
 
 
@@ -13,7 +16,10 @@ import com.application.se2.misc.IDGenerator;
  * @author sgra64
  * 
  */
-public class Customer implements Entity {
+
+@Entity
+@Table(name = "Customer")
+public class Customer implements com.application.se2.model.Entity {
 	private static final long serialVersionUID = 1L;
 
 	private static final IDGenerator CustomerIdGenerator
@@ -22,43 +28,67 @@ public class Customer implements Entity {
 	/*
 	 * Entity Properties.
 	 */
+	@Id
+	@Column(name ="id")
 	private final String id;
 
+	@Column(name ="name")
 	private String name;
 
+	@Column(name ="address")
 	private String address;
 
+	@Column(name="contacts")
+	@Convert(converter = com.application.se2.model.customserializer.StringListConverter.class)		// map List<String> to single, ';'-separated String
 	private final List<String>contacts;
 
+	@OneToMany(
+			fetch = FetchType.EAGER,
+			cascade = CascadeType.ALL,
+			mappedBy = "customer"
+	)
 	private final List<Note>notes;
 
+	//@Transient
 	private final Date created;
 
 	public enum Status { ACT, SUSP, TERM };
 	//
+	@Column(name="status")
 	private Status status;
 
+
+	/**
+	 * Default constructor needed by JSON deserialization and Hibernate (private
+	 * is sufficient). Public default constructor needed by Hibernate/JPA access.
+	 * Otherwise Hibernate Error: HHH000142: Bytecode enhancement failed).
+	 */
+	public Customer() {
+		this( null );
+	}
 
 	/**
 	 * Public constructor.
 	 * @param name Customer name.
 	 */
 	public Customer( final String name ) {
-		this( null, name );
+		this( null, name, null );
 	}
+
 
 	/**
 	 * Private constructor.
 	 * @param id if null is passed as id, an ID will be generated.
 	 * @param name Customer name.
 	 */
-	private Customer( final String id, final String name ) {
+	public Customer( final String id, final String name, final Date created ) {
 		this.id = id == null? CustomerIdGenerator.nextId() : id;
 		setName( name );
 		this.address = "";
 		this.contacts = new ArrayList<String>();
 		this.notes = new ArrayList<Note>();
-		this.created = new Date();
+		//this.created = new Date();
+		this.created = created==null? new Date() : created;
 		this.status = Status.ACT;
 	}
 
@@ -160,6 +190,7 @@ public class Customer implements Entity {
 		if( noteStr != null && noteStr.length() > 0 ) {
 			Note note = new Note( noteStr.trim() );
 			notes.add( note );
+			note.setCustomer(this);
 		}
 		return this;
 	}

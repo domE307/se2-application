@@ -1,0 +1,119 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[remote "origin"]
+	url = https://github.com/domE307/se2-application.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "json-persistence"]
+	remote = origin
+	merge = refs/heads/json-persistence
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+commit 59d99efb4477e5b9759852e39b78c78e156396b0
+Author: Sven Graupner <sgraupner@beuth-hochschule.de>
+Date:   Tue Nov 19 11:43:25 2019 +0100
+
+    fixed Umlauts in customer data set.
+
+ .../java/com/application/se2/repository/RepositoryBuilder.java    | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 02fd21830493172295e6a1a72f9bf3dc6301933c
+Author: Sven Graupner <sgraupner@beuth-hochschule.de>
+Date:   Sun Nov 17 21:30:31 2019 +0100
+
+    added log* files to .gitignore
+
+ .gitignore | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 03d7cf08b326b70693a81ca472e7325572d7e9a6
+Author: Sven Graupner <sgraupner@beuth-hochschule.de>
+Date:   Sun Nov 17 21:26:08 2019 +0100
+
+    added log* files to .gitignore
+
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 978a8c1ddc2f01c302992388e69c7daf18671243
+Author: Sven Graupner <sgraupner@beuth-hochschule.de>
+Date:   Sun Nov 17 20:37:59 2019 +0100
+
+    Adjusted Logger interface to match log4j.
+
+ src/main/java/com/application/se2/misc/Logger.java | 16 +++++++++++
+ .../java/com/application/se2/misc/LoggerImpl.java  | 32 ++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+
+commit 02703be9b9bbfddbd01ad2b08d8ff2689d516054
+Merge: f3749a4 2cdb2fa
+Author: Sven Graupner <sgraupner@beuth-hochschule.de>
+Date:   Sun Nov 17 20:24:56 2019 +0100
+
+    updated .gitignore
+.gitignore
+README.md
+pom.xml
+src/main/java/com/application/se2/AppBuilder.java
+src/main/java/com/application/se2/AppConfigurator.java
+src/main/java/com/application/se2/AppRunner.java
+src/main/java/com/application/se2/Application.java
+src/main/java/com/application/se2/components/AppComp.java
+src/main/java/com/application/se2/components/ArticleCatalogComp.java
+src/main/java/com/application/se2/components/BuilderIntf.java
+src/main/java/com/application/se2/components/CalculatorComp.java
+src/main/java/com/application/se2/components/ComponentBase.java
+src/main/java/com/application/se2/components/ComponentIntf.java
+src/main/java/com/application/se2/components/CustomerManagerComp.java
+src/main/java/com/application/se2/components/RunnerIntf.java
+src/main/java/com/application/se2/fxgui/App.css
+src/main/java/com/application/se2/fxgui/App.fxml
+src/main/java/com/application/se2/fxgui/AppFXMLController.java
+src/main/java/com/application/se2/fxgui/ArticleView.css
+src/main/java/com/application/se2/fxgui/Calculator.css
+src/main/java/com/application/se2/fxgui/Calculator.fxml
+src/main/java/com/application/se2/fxgui/CalculatorFXMLController.java
+src/main/java/com/application/se2/fxgui/CustomerView.css
+src/main/java/com/application/se2/fxgui/FXBuilder.java
+src/main/java/com/application/se2/fxgui/FXControllerIntf.java
+src/main/java/com/application/se2/fxgui/FXInterface.java
+src/main/java/com/application/se2/fxgui/FXRunner.java
+src/main/java/com/application/se2/fxgui/TableColumnProperty.java
+src/main/java/com/application/se2/fxgui/TableItem.java
+src/main/java/com/application/se2/fxgui/TableView.css
+src/main/java/com/application/se2/fxgui/TableView.fxml
+src/main/java/com/application/se2/fxgui/TableViewConfig.java
+src/main/java/com/application/se2/fxgui/TableViewFXMLController.java
+src/main/java/com/application/se2/fxgui/TableViewImpl.java
+src/main/java/com/application/se2/fxgui/TableViewPopUp.java
+src/main/java/com/application/se2/fxgui/TableViewUpdateForm.java
+src/main/java/com/application/se2/logic/ArticleCatalog.java
+src/main/java/com/application/se2/logic/CalculatorLogic.java
+src/main/java/com/application/se2/logic/CustomerManager.java
+src/main/java/com/application/se2/misc/Callback.java
+src/main/java/com/application/se2/misc/EntityProperty.java
+src/main/java/com/application/se2/misc/EntityPropertyAccessor.java
+src/main/java/com/application/se2/misc/EntityPropertyUpdateSet.java
+src/main/java/com/application/se2/misc/IDGenerator.java
+src/main/java/com/application/se2/misc/Logger.java
+src/main/java/com/application/se2/misc/LoggerImpl.java
+src/main/java/com/application/se2/misc/Snippets.java
+src/main/java/com/application/se2/misc/StringProperty.java
+src/main/java/com/application/se2/misc/Traceable.java
+src/main/java/com/application/se2/model/Article.java
+src/main/java/com/application/se2/model/Customer.java
+src/main/java/com/application/se2/model/Entity.java
+src/main/java/com/application/se2/model/Note.java
+src/main/java/com/application/se2/repository/CrudRepository.java
+src/main/java/com/application/se2/repository/RepositoryBuilder.java
+src/main/java/com/application/se2/repository/RepositoryIntf.java
+src/main/java/com/application/se2/repository/RepositoryRunner.java
+src/main/java/com/application/se2/repository/SimpleRepositoryImpl.java
+src/test/java/com/application/se2/ApplicationTest.java
+src/test/java/com/application/se2/TestCases_ApplicationName.java

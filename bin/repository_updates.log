@@ -1,0 +1,12 @@
+2020-12-09 22:24:12.267ms INFO  CalculatorLogic: + startup: Calculator24
+2020-12-09 22:24:12.269ms INFO  CustomerManager: + startup: Kunden
+2020-12-09 22:24:12.271ms INFO  ArticleCatalog: + startup: Artikelkatalog
+2020-12-09 22:24:19.926ms INFO  CustomerManager:Update Customer: K999508
+2020-12-09 22:24:25.302ms INFO  CustomerManager:Update Customer: K136161
+2020-12-09 22:24:28.331ms INFO  CustomerManager:Delete Customer(s): K663439, K562980, K082407
+2020-12-09 22:24:31.030ms INFO  ArticleCatalog:Delete Article(s): P86819037, P53117347, P67610947
+2020-12-09 22:24:34.042ms INFO  ArticleCatalog:Create new Article: P39356008
+2020-12-09 22:24:35.339ms INFO  ArticleCatalog:Update Article: P39356008
+2020-12-09 22:24:38.050ms INFO  ArticleCatalog: - shutdown: Artikelkatalog
+2020-12-09 22:24:38.052ms INFO  CustomerManager: - shutdown: Kunden
+2020-12-09 22:24:38.053ms INFO  CalculatorLogic: - shutdown: Calculator24

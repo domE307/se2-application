@@ -7,3 +7,4 @@ data*
 *.tar
 .idea/
 *.iml
+playbook.txt

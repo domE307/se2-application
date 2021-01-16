@@ -6,6 +6,9 @@ import java.util.Date;
 
 import com.application.se2.misc.EntityProperty;
 
+import javax.persistence.*;
+import javax.persistence.Entity;
+
 
 /**
  * Class Note represents a short text line to store short hints or comments
@@ -16,16 +19,39 @@ import com.application.se2.misc.EntityProperty;
  * 
  * @author sgra64
  */
+@Entity
+@Table(name = "Notes")
 public class Note implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final String FieldSeparator = ";; ";
 	private static long lastTimeStamp = 0L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private long id;
+
+	@Column(name= "time")
 	private Date timeStamp = null;		// TimeStamp part of Note.
 
+	@Column(name= "note")
 	private String noteText = null;		// Text part of Note.
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Customer customer;
+
+
+
+	/**
+	 * Default constructor needed by JSON deserialization and Hibernate (private
+	 * is sufficient). Public default constructor needed by Hibernate/JPA access.
+	 * Otherwise Hibernate Error: HHH000142: Bytecode enhancement failed).
+	 */
+	public Note() {
+		this.timeStamp = new Date();
+		this.noteText = "";
+	}
 
 	/**
 	 * Public constructor.
@@ -60,6 +86,15 @@ public class Note implements Serializable {
 	 */
 	public void setText( String text ) {
 		this.noteText = text;
+	}
+
+
+	/**
+	 * Externalize Note as String. Example: "2018-03-15 20:10:27.730, Customer 1234 created".
+	 * @return Note as externalized String.
+	 */
+	public String externalize() {
+		return EntityProperty.DF_yyyy_MM_dd_HH_mm_ss_SSS.format( timeStamp ) + FieldSeparator + noteText;
 	}
 
 
@@ -105,6 +140,10 @@ public class Note implements Serializable {
 			lastTimeStamp = nowL;
 		}
 		return now;
+	}
+
+	public void setCustomer(Customer customer2) {
+		this.customer = customer2;
 	}
 
 }
